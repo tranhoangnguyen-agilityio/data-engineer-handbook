@@ -51,4 +51,5 @@ def main():
       .getOrCreate()
     output_df = do_player_scd_transformation(spark, spark.table("players"))
     output_df.write.mode("overwrite").insertInto("players_scd")
+    print("AGIGIG")
 
