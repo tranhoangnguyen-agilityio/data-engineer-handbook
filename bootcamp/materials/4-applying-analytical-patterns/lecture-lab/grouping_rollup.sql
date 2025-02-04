@@ -1,4 +1,4 @@
-CREATE TABLE device_hits_dashboard AS
+-- CREATE TABLE device_hits_dashboard AS
 
 WITH events_augmented AS (
     SELECT COALESCE(d.os_type, 'unknown')      AS os_type,
@@ -11,8 +11,8 @@ WITH events_augmented AS (
 )
 
 SELECT
-        -- GROUPING is determine with group by dimension if on (0) or off (1) 
-       CASE
+       -- GROUPING is determine with group by dimension if on (0) or off (1) 
+	   CASE
            WHEN GROUPING(os_type) = 0
                AND GROUPING(device_type) = 0
                AND GROUPING(browser_type) = 0
@@ -26,10 +26,5 @@ SELECT
        COALESCE(browser_type, '(overall)') as browser_type,
        COUNT(1) as number_of_hits
 FROM events_augmented
-GROUP BY GROUPING SETS (
-        (browser_type, device_type, os_type),
-        (browser_type),
-        (os_type),
-        (device_type)
-    )
+GROUP BY ROLLUP (os_type, device_type, browser_type)
 ORDER BY COUNT(1) DESC
